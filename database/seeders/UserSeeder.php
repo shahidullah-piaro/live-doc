@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\Traits\DisableForeignKeys;
 use Database\Seeders\Traits\TruncateTable;
 
-class PostSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     use TruncateTable, DisableForeignKeys;
     /**
@@ -16,8 +16,8 @@ class PostSeeder extends Seeder
     public function run(): void
     {
         $this->disableForeignKeys();
-        $this->truncate('posts');
-        \App\Models\Post::factory(10)->untitled()->create();
+        $this->truncate('users');
+        \App\Models\User::factory(10)->create();
         $this->enableForeignKeys();
     }
 }
