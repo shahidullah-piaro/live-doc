@@ -51,7 +51,7 @@ class PostController extends Controller
      * @param StorePostRequest  $request
      * @return PostResource
      */
-    public function store(StorePostRequest $request, PostRepository $repository)
+    public function store(Request $request, PostRepository $repository)
     {
         $payload = $request->only([
             'title',

@@ -54,7 +54,7 @@ class UserController extends Controller
             'email',
         ]);
         Validator::validate($payload, [
-            'name' => 'required|string|max:20', // Maximum name length of 255 chars
+            'name' => 'required|string|max:20', 
             'email' => 'required|email|unique:users,email'
         ]);
 
@@ -95,7 +95,7 @@ class UserController extends Controller
             'email',
         ]);
         Validator::validate($payload, [
-            'name' => 'required|string|max:20', // Maximum name length of 255 chars
+            'name' => 'required|string|max:20', 
             'email' => 'required|email|unique:users,email'
         ]);
 
