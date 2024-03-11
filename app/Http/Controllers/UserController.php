@@ -8,6 +8,8 @@ use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Validator;
+
 
 /**
  * @group User Management
@@ -46,10 +48,17 @@ class UserController extends Controller
      */
     public function store(Request $request, UserRepository $repository)
     {
-        $created = $repository->create($request->only([
+
+        $payload = $request->only([
             'name',
             'email',
-        ]));
+        ]);
+        Validator::validate($payload, [
+            'name' => 'required|string|max:20', // Maximum name length of 255 chars
+            'email' => 'required|email|unique:users,email'
+        ]);
+
+        $created = $repository->create($payload);
 
         return new UserResource($created);
     }
@@ -81,10 +90,16 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user, UserRepository $repository)
     {
-        $user = $repository->update($user, $request->only([
+        $payload = $request->only([
             'name',
             'email',
-        ]));
+        ]);
+        Validator::validate($payload, [
+            'name' => 'required|string|max:20', // Maximum name length of 255 chars
+            'email' => 'required|email|unique:users,email'
+        ]);
+
+        $user = $repository->update($user, $payload);
 
         return new UserResource($user);
     }

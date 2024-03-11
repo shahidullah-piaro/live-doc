@@ -111,7 +111,6 @@ class PostController extends Controller
     public function update(Request $request, Post $post, PostRepository $repository)
     {
 
-        $validated = $request->validated();
         $payload = $request->only([
             'title',
             'body',

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use Illuminate\Support\Facades\Validator;
+
 
 /**
  * @group Comment Management
@@ -46,13 +48,19 @@ class CommentController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return CommentResource
      */
-    public function store(StoreCommentRequest $request, CommentRepository $repository)
+    public function store(Request $request, CommentRepository $repository)
     {
-        $created = $repository->create($request->only([
+        $payload = $request->only([
             'body',
             'user_id',
-            'post_id',
-        ]));
+            'post_id'
+        ]);
+        Validator::validate($payload, [
+            'body' => 'required',
+            'user_id' => 'required|integer|min:1',
+            'post_id' => 'required|integer|min:1'
+        ]);
+        $created = $repository->create($payload);
 
         return new CommentResource($created);
     }
@@ -82,11 +90,17 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment, CommentRepository $repository)
     {
-        $comment = $repository->update($comment, $request->only([
+        $payload = $request->only([
             'body',
             'user_id',
-            'post_id',
-        ]));
+            'post_id'
+        ]);
+        Validator::validate($payload, [
+            'body' => 'required',
+            'user_id' => 'required|integer|min:1',
+            'post_id' => 'required|integer|min:1'
+        ]);
+        $comment = $repository->update($comment, $payload);
         return new CommentResource($comment);
     }
 
