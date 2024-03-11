@@ -51,7 +51,7 @@ class PostController extends Controller
      * @param StorePostRequest  $request
      * @return PostResource
      */
-    public function store(Request $request, PostRepository $repository)
+    public function store(StorePostRequest $request, PostRepository $repository)
     {
         $payload = $request->only([
             'title',
@@ -110,11 +110,36 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post, PostRepository $repository)
     {
-        $post = $repository->update($post, $request->only([
+
+        $validated = $request->validated();
+        $payload = $request->only([
             'title',
             'body',
-            'user_ids',
-        ]));
+            'user_ids'
+        ]);
+        Validator::validate($payload, [
+            'title' => 'string|required',
+            'body' => ['array','required'],
+            'user_ids' => [
+                'array',
+                'required',
+                function($attribute, $value, $fail){
+                    $integerOnly = collect($value)->every(fn ($element) => is_int($element));
+ 
+                    if(!$integerOnly){
+                        $fail($attribute . ' can only be integers.');
+                    }
+                }
+            ]
+        ], [
+            'body.required' => "Please enter a value for body.",
+            'title.string' => 'HEYYYY use a string',
+        ], [
+            'user_ids' => 'USERR IDDD'
+        ]);
+        
+
+        $post = $repository->update($post, $payload);
         return new PostResource($post);
 
     }

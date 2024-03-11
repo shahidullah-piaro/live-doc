@@ -8,6 +8,8 @@ use App\Repositories\CommentRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 
 /**
  * @group Comment Management
@@ -44,7 +46,7 @@ class CommentController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return CommentResource
      */
-    public function store(Request $request, CommentRepository $repository)
+    public function store(StoreCommentRequest $request, CommentRepository $repository)
     {
         $created = $repository->create($request->only([
             'body',
