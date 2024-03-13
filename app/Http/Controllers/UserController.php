@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 
 
 /**
@@ -88,6 +90,7 @@ class UserController extends Controller
      * @param \App\Models\User $user
      * @return UserResource | JsonResponse
      */
+    
     public function update(Request $request, User $user, UserRepository $repository)
     {
         $payload = $request->only([
@@ -95,8 +98,13 @@ class UserController extends Controller
             'email',
         ]);
         Validator::validate($payload, [
+            
             'name' => 'required|string|max:20', 
-            'email' => 'required|email|unique:users,email'
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user), // Assuming $this->user holds the existing user
+            ]
         ]);
 
         $user = $repository->update($user, $payload);
